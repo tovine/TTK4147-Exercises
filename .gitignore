@@ -1,0 +1,7 @@
+# Ignore compiler output
+*.out
+*.o
+
+# Ignore vim lockfiles
+*.swp
+*.swo

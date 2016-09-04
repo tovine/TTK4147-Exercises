@@ -56,6 +56,8 @@ void list_append(list_t list, int data)
 void list_print(list_t list)
 {
 	node_t current_node = list->head;
+	if (current_node == NULL)
+		return;
 	while (current_node->next != NULL) {
 		printf("%d ", current_node->data);
 		current_node = current_node->next;
@@ -81,7 +83,7 @@ int list_get(list_t list, int index)
 		return -1; // TODO: stupid return value, should assert
 	}
 	node_t current_node = list->head;
-	for (int i = 1; i < index; i++) {
+	for (int i = 0; i < index; i++) {
 		current_node = current_node -> next;
 	}
 	return current_node->data;
@@ -89,13 +91,12 @@ int list_get(list_t list, int index)
 
 int list_extract(list_t list, int index)
 {
-	// TODO: Segfault when extracting the last list element
 	if (index >= list->length) {
 		printf("Error: requested index out of bounds");
 		return -1; // TODO: stupid return value, should assert
 	}
 	node_t current_node = list->head;
-	for (int i = 1; i < index; i++) {
+	for (int i = 0; i < index; i++) {
 		current_node = current_node -> next;
 	}
 	if (current_node->prev != NULL) {
