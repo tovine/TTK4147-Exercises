@@ -4,3 +4,25 @@ It continues to allocate new memory without ever freeing it up (because it calls
 
 Assignment B:
 =============
+
+Assignment C:
+=============
+
+Assignment D:
+=============
+Busy wait delay takes more CPU time, but less real (wall clock) time. The difference is because instead of sleeping for 5 seconds, the threads just "spin" while doing "useless" work. Therefore it actually uses 5 seconds of CPU time.
+
+Results of execution:
+
+Version using sleep(5):
+----------------
+real    0m5.002s
+user    0m0.004s
+sys     0m0.000s
+
+Version using busy_wait_delay(5):
+----------------
+real    0m3.135s
+user    0m5.000s
+sys     0m1.264s
+
