@@ -1,0 +1,6 @@
+Assignment A:
+=============
+It continues to allocate new memory without ever freeing it up (because it calls malloc without calling free afterwards). This leads to indefinite growth in memory consumption until the program is killed or the host runs out of RAM/swap and crashes.
+
+Assignment B:
+=============
