@@ -1,0 +1,12 @@
+Assignment A:
+=============
+The results differ because the version using fork() just starts a new process that runs in parallell to the original one, while the vfork() version waits for the forked process to exit, and "picks up" the variables that the other one left behind.
+
+Assignment B:
+=============
+With N = 500, local count became 500 and global count 1000. This is because both threads share the same memory (as opposed to the processes), we would expect the global counter to get corrupted if both threads write at the same time. But it didn't - either we were lucky, or the + operation is atomic in C.
+
+Assignment C:
+=============
+Because thread1 is preempted between incrementing var1 and updating var2, in order for thread2 to print.
+After applying mutexes it works.
