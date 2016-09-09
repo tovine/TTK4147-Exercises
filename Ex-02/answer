@@ -6,7 +6,11 @@ Assignment B:
 =============
 With N = 500, local count became 500 and global count 1000. This is because both threads share the same memory (as opposed to the processes), we would expect the global counter to get corrupted if both threads write at the same time. But it didn't - either we were lucky, or the + operation is atomic in C.
 
-Assignment C:
+Assignment D:
 =============
 Because thread1 is preempted between incrementing var1 and updating var2, in order for thread2 to print.
 After applying mutexes it works.
+
+Assignment E:
+=============
+Fixed with extra mutex
