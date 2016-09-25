@@ -1,0 +1,7 @@
+Assignment B:
+=============
+If one task has higher priority than the rest, only that will run.
+
+Assignment C:
+=============
+vTaskDelay() is blocking, and the thread needs to be preempted for others to run, vTaskDelayUntil() suspends the current thread, allowing others to run.
