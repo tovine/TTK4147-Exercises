@@ -197,7 +197,7 @@ int main()
 	xTaskCreate( reactToButterfly, (signed char * ) "TEST_A", configMINIMAL_STACK_SIZE, &A, tskIDLE_PRIORITY + 3, NULL);
 	xTaskCreate( reactToButterfly, (signed char * ) "TEST_B", configMINIMAL_STACK_SIZE, &B, tskIDLE_PRIORITY + 3, NULL);
 	xTaskCreate( reactToButterfly, (signed char * ) "TEST_C", configMINIMAL_STACK_SIZE, &C, tskIDLE_PRIORITY + 3, NULL);
-	xTaskCreate( wasteTime, (signed char * ) "WASTE", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
+//	xTaskCreate( wasteTime, (signed char * ) "WASTE", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
 	
 	// start basic task
 //	xTaskCreate( vBasicTask, (signed char * ) "BASIC", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
@@ -244,16 +244,17 @@ static void toggleLed1(void *pvParameters)
 static void reactToButterfly(void *pvParameters)
 {
 	portTickType previousWakeup = xTaskGetTickCount();
-	const portTickType xDelay = 5 / (1000 * portTICK_RATE_MS), taskPeriod = 5 / portTICK_RATE_MS;
+	const portTickType xDelay = 1, taskPeriod = 5 / portTICK_RATE_MS;
 	pin_pair_t* config = pvParameters;
 	while(1) {
-		if (gpio_get_pin_value(config->input)) {
+		if (!gpio_get_pin_value(config->input)) {
 			gpio_set_pin_low(config->response);
 			vTaskDelay(xDelay); // Task B
 //			vTaskDelayUntil(&previousWakeup, xDelay);
 			gpio_set_pin_high(config->response);
 		}
-		vTaskDelayUntil(&previousWakeup, taskPeriod);
+//		vTaskDelay(taskPeriod);
+//		vTaskDelayUntil(&previousWakeup, taskPeriod);
 	}
 }
 
@@ -272,11 +273,11 @@ static void wasteTime(void *pvParameters)
 
 static void initPins(void){
 	gpio_configure_pin(TEST_A,GPIO_DIR_INPUT);
-	gpio_configure_pin(TEST_A,GPIO_PULL_DOWN);
+	gpio_configure_pin(TEST_A,GPIO_PULL_UP);
 	gpio_configure_pin(TEST_B,GPIO_DIR_INPUT);
-	gpio_configure_pin(TEST_B,GPIO_PULL_DOWN);
+	gpio_configure_pin(TEST_B,GPIO_PULL_UP);
 	gpio_configure_pin(TEST_C,GPIO_DIR_INPUT);
-	gpio_configure_pin(TEST_C,GPIO_PULL_DOWN);
+	gpio_configure_pin(TEST_C,GPIO_PULL_UP);
 
 	gpio_configure_pin(RESPONSE_A,GPIO_DIR_OUTPUT);
 	gpio_configure_pin(RESPONSE_B,GPIO_DIR_OUTPUT);

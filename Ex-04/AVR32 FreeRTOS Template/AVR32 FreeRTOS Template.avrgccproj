@@ -15,7 +15,7 @@
     <OutputType>Executable</OutputType>
     <Language>C</Language>
     <UseGlobalToolchain>True</UseGlobalToolchain>
-    <GlobalToolchainPath>C:\Program Files\Atmel\AVR Studio 5.0\AVR ToolChain\bin</GlobalToolchainPath>
+    <GlobalToolchainPath>C:\Program Files (x86)\Atmel\AVR Studio 5.0\AVR ToolChain\bin</GlobalToolchainPath>
     <ToolchainDirPath />
     <MakeDirPath />
     <avrtool>com.atmel.avrdbg.tool.jtagicemkii</avrtool>
@@ -43,7 +43,7 @@
         </InterfaceProperties>
       </ToolOptions>
     </com_atmel_avrdbg_tool_jtagicemkii>
-    <avrtoolinterface />
+    <avrtoolinterface>JTAG</avrtoolinterface>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
