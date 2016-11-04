@@ -1,0 +1,219 @@
+!SESSION 2016-11-04 11:18:14.135 -----------------------------------------------
+eclipse.buildId=201006232051
+java.version=1.5.0_11
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=no_NO
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.equinox.registry 2 0 2016-11-04 11:18:26.987
+!MESSAGE The extensions and extension-points from the bundle "com.qnx.doc.ide.userguide" are ignored. The bundle is not marked as singleton. 
+
+!ENTRY org.eclipse.ui.workbench 2 0 2016-11-04 11:19:13.689
+!MESSAGE A handler conflict occurred.  This may disable some commands.
+!SUBENTRY 1 org.eclipse.ui.workbench 2 0 2016-11-04 11:19:13.689
+!MESSAGE Conflict for 'AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction':
+HandlerActivation(commandId=AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction,
+	handler=ActionDelegateHandlerProxy(null,org.eclipse.ui.cheatsheets.CheatSheetExtensionFactory:helpMenuAction),
+	expression=AndExpression(ActionSetExpression(org.eclipse.ui.cheatsheets.actionSet,org.eclipse.ui.internal.WorkbenchWindow@640f1a),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@640f1a)),sourcePriority=16640)
+HandlerActivation(commandId=AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction,
+	handler=ActionDelegateHandlerProxy(null,org.eclipse.ui.cheatsheets.CheatSheetExtensionFactory:helpMenuAction),
+	expression=AndExpression(ActionSetExpression(org.eclipse.ui.cheatsheets.actionSet,org.eclipse.ui.internal.WorkbenchWindow@640f1a),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@640f1a)),sourcePriority=16640)
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-11-04 11:23:04.028
+!MESSAGE Indexed 'ov8Sanntid' (1 sources, 55 headers) in 1,90 sec: 5 170 declarations; 3 248 references; 3 unresolved inclusions; 0 syntax errors; 0 unresolved names (0,00 %)
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-11-04 11:23:05.064
+!MESSAGE Indexed 'ov8read' (1 sources, 55 headers) in 0,54 sec: 5 180 declarations; 3 269 references; 3 unresolved inclusions; 0 syntax errors; 0 unresolved names (0,00 %)
+
+!ENTRY com.qnx.tools.ide.SystemProfiler.core 2 2 2016-11-04 11:31:41.345
+!MESSAGE Repairable data format problems
+
+!ENTRY com.qnx.tools.ide.SystemProfiler.core 2 2 2016-11-04 11:38:34.629
+!MESSAGE Repairable data format problems
+
+!ENTRY org.eclipse.cdt.core 1 0 2016-11-04 11:46:29.746
+!MESSAGE Indexed 'ov9Sanntid' (3 sources, 57 headers) in 0,54 sec: 5 475 declarations; 3 674 references; 3 unresolved inclusions; 0 syntax errors; 0 unresolved names (0,00 %)
+
+!ENTRY org.eclipse.core.runtime 8 1 2016-11-04 12:32:55.906
+!MESSAGE 
+
+!ENTRY org.eclipse.core.runtime 8 1 2016-11-04 12:32:55.914
+!MESSAGE 
+
+!ENTRY org.eclipse.core.runtime 8 1 2016-11-04 12:32:55.922
+!MESSAGE 
+
+!ENTRY org.eclipse.core.runtime 8 1 2016-11-04 12:32:55.930
+!MESSAGE 
+
+!ENTRY org.eclipse.cdt.ui 4 4 2016-11-04 12:36:20.528
+!MESSAGE Error
+!STACK 0
+java.lang.ClassCastException: org.eclipse.cdt.internal.core.dom.parser.c.CASTSimpleDeclSpecifier
+	at org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.CPPVisitor.findDeclarationOwner(CPPVisitor.java:2101)
+	at org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.CPPVisitor.findNameOwner(CPPVisitor.java:2064)
+	at org.eclipse.cdt.internal.core.dom.parser.ProblemBinding.getOwner(ProblemBinding.java:250)
+	at org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.AccessContext.isAccessible(AccessContext.java:75)
+	at org.eclipse.cdt.internal.ui.text.contentassist.DOMCompletionProposalComputer.computeCompletionProposals(DOMCompletionProposalComputer.java:139)
+	at org.eclipse.cdt.internal.ui.text.contentassist.ParsingBasedProposalComputer.computeCompletionProposals(ParsingBasedProposalComputer.java:55)
+	at org.eclipse.cdt.internal.ui.text.contentassist.CompletionProposalComputerDescriptor.computeCompletionProposals(CompletionProposalComputerDescriptor.java:300)
+	at org.eclipse.cdt.internal.ui.text.contentassist.CompletionProposalCategory.computeCompletionProposals(CompletionProposalCategory.java:261)
+	at org.eclipse.cdt.internal.ui.text.contentassist.ContentAssistProcessor.collectProposals(ContentAssistProcessor.java:267)
+	at org.eclipse.cdt.internal.ui.text.contentassist.ContentAssistProcessor.computeCompletionProposals(ContentAssistProcessor.java:220)
+	at org.eclipse.jface.text.contentassist.ContentAssistant.computeCompletionProposals(ContentAssistant.java:1832)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup.computeProposals(CompletionProposalPopup.java:556)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup.access$16(CompletionProposalPopup.java:553)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup$14.run(CompletionProposalPopup.java:1541)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+	at org.eclipse.jface.text.contentassist.CompletionProposalPopup.incrementalComplete(CompletionProposalPopup.java:1535)
+	at org.eclipse.jface.text.contentassist.ContentAssistant.showPossibleCompletions(ContentAssistant.java:1659)
+	at org.eclipse.cdt.internal.ui.editor.CEditor$AdaptedSourceViewer.doOperation(CEditor.java:320)
+	at org.eclipse.ui.texteditor.ContentAssistAction$1.run(ContentAssistAction.java:82)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:70)
+	at org.eclipse.ui.texteditor.ContentAssistAction.run(ContentAssistAction.java:80)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:498)
+	at org.eclipse.ui.commands.ActionHandler.execute(ActionHandler.java:185)
+	at org.eclipse.ui.internal.handlers.LegacyHandlerWrapper.execute(LegacyHandlerWrapper.java:109)
+	at org.eclipse.core.commands.Command.executeWithChecks(Command.java:476)
+	at org.eclipse.core.commands.ParameterizedCommand.executeWithChecks(ParameterizedCommand.java:508)
+	at org.eclipse.ui.internal.handlers.HandlerService.executeCommand(HandlerService.java:169)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.executeCommand(WorkbenchKeyboard.java:470)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.press(WorkbenchKeyboard.java:824)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.processKeyEvent(WorkbenchKeyboard.java:880)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.filterKeySequenceBindings(WorkbenchKeyboard.java:569)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard.access$3(WorkbenchKeyboard.java:510)
+	at org.eclipse.ui.internal.keys.WorkbenchKeyboard$KeyDownFilter.handleEvent(WorkbenchKeyboard.java:125)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+	at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1208)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1002)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1027)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1012)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1040)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1036)
+	at org.eclipse.swt.widgets.Widget.wmChar(Widget.java:1368)
+	at org.eclipse.swt.widgets.Control.WM_CHAR(Control.java:4053)
+	at org.eclipse.swt.widgets.Canvas.WM_CHAR(Canvas.java:346)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:3946)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:342)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:4619)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2411)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3501)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2405)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2369)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2221)
+	at org.eclipse.ui.internal.Workbench$5.run(Workbench.java:500)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:332)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:493)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:113)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:194)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:110)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:79)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:368)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:179)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:559)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:514)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1311)
+
+!ENTRY org.eclipse.core.runtime 8 1 2016-11-04 12:36:37.530
+!MESSAGE 
+
+!ENTRY org.eclipse.core.runtime 8 1 2016-11-04 12:36:37.538
+!MESSAGE 
+
+!ENTRY org.eclipse.core.runtime 8 1 2016-11-04 12:36:37.546
+!MESSAGE 
+
+!ENTRY org.eclipse.debug.core 4 125 2016-11-04 12:40:34.348
+!MESSAGE Error logged from Debug Core: 
+!STACK 0
+java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.io.DataInputStream.read(Unknown Source)
+	at com.qnx.tools.utils.target.TargetProcess$InputStreamWrapper.read(Unknown Source)
+	at java.io.BufferedInputStream.read1(Unknown Source)
+	at java.io.BufferedInputStream.read(Unknown Source)
+	at java.io.FilterInputStream.read(Unknown Source)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:144)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:134)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:207)
+	at java.lang.Thread.run(Unknown Source)
+
+!ENTRY org.eclipse.debug.core 4 125 2016-11-04 12:40:37.065
+!MESSAGE Error logged from Debug Core: 
+!STACK 0
+java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.io.DataInputStream.read(Unknown Source)
+	at com.qnx.tools.utils.target.TargetProcess$InputStreamWrapper.read(Unknown Source)
+	at java.io.BufferedInputStream.read1(Unknown Source)
+	at java.io.BufferedInputStream.read(Unknown Source)
+	at java.io.FilterInputStream.read(Unknown Source)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.read(OutputStreamMonitor.java:144)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor.access$1(OutputStreamMonitor.java:134)
+	at org.eclipse.debug.internal.core.OutputStreamMonitor$1.run(OutputStreamMonitor.java:207)
+	at java.lang.Thread.run(Unknown Source)
+
+!ENTRY com.qnx.tools.ide.qde.debug.core 4 0 2016-11-04 13:22:23.954
+!MESSAGE Launch cleaning error
+!SUBENTRY 1 com.qnx.tools.ide.qde.debug.core 4 0 2016-11-04 13:22:23.955
+!MESSAGE Attempt to delete remote file '/tmp/fileslaurittr147825947814617' failed:
+!STACK 0
+java.net.SocketException: Connection reset by peer: socket write error
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(Unknown Source)
+	at java.net.SocketOutputStream.write(Unknown Source)
+	at java.io.DataOutputStream.write(Unknown Source)
+	at java.io.FilterOutputStream.write(Unknown Source)
+	at com.qnx.tools.utils.target.TargetBinary.sendCommand(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.command(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.command(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.rm(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.rm(Unknown Source)
+	at com.qnx.tools.ide.qde.debug.internal.core.QDELaunch$1.run(Unknown Source)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.qnx.tools.ide.qde.debug.core 4 0 2016-11-04 13:24:46.191
+!MESSAGE Connection timed out: connect
+!STACK 0
+java.net.ConnectException: Connection timed out: connect
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.PlainSocketImpl.doConnect(Unknown Source)
+	at java.net.PlainSocketImpl.connectToAddress(Unknown Source)
+	at java.net.PlainSocketImpl.connect(Unknown Source)
+	at java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.connect(Unknown Source)
+	at java.net.Socket.<init>(Unknown Source)
+	at java.net.Socket.<init>(Unknown Source)
+	at com.qnx.tools.utils.target.QConnSocket.<init>(Unknown Source)
+	at com.qnx.tools.utils.target.QConnSocket.<init>(Unknown Source)
+	at com.qnx.tools.utils.target.QConnSocket.<init>(Unknown Source)
+	at com.qnx.tools.utils.target.TargetBinary.<init>(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.<init>(Unknown Source)
+	at com.qnx.tools.ide.qde.debug.internal.core.QDELaunch.getFileService(Unknown Source)
+	at com.qnx.tools.ide.qde.internal.ui.launch.QDELaunchConfigurationDelegate.prepareAndDownloadBinaries(Unknown Source)
+	at com.qnx.tools.ide.qde.internal.ui.launch.QDELaunchConfigurationDelegate$1.doRun(Unknown Source)
+	at com.qnx.tools.ide.qde.internal.ui.launch.QDELaunchConfigurationDelegate$QDELaunchJob.run(Unknown Source)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY com.qnx.tools.ide.qde.debug.core 4 0 2016-11-04 13:26:23.756
+!MESSAGE Launch cleaning error
+!SUBENTRY 1 com.qnx.tools.ide.qde.debug.core 4 0 2016-11-04 13:26:23.756
+!MESSAGE Attempt to delete remote file '/tmp/fileslaurittr147826215077018' failed:
+!STACK 0
+java.io.IOException: EOF
+	at com.qnx.tools.utils.target.TargetBinary.receiveResponse(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.command(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.command(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.rm(Unknown Source)
+	at com.qnx.tools.utils.target.TargetServiceFile.rm(Unknown Source)
+	at com.qnx.tools.ide.qde.debug.internal.core.QDELaunch$1.run(Unknown Source)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)

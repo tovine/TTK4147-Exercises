@@ -51,7 +51,7 @@ int get_priority() {
 }
 
 void startServer(void) {
-	int channel_id = ChannelCreate(_NTO_CHF_FIXED_PRIORITY); // _NTO_CHF_FIXED_PRIORITY
+	int channel_id = ChannelCreate(0); // _NTO_CHF_FIXED_PRIORITY
 	char recvBuf[BUFFER_SIZE + 1];
 	recvBuf[BUFFER_SIZE] = '\0';
 	set_priority(4);
