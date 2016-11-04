@@ -224,23 +224,53 @@ int io_read_fifo(resmgr_context_t *ctp, io_read_t *msg, iofunc_ocb_t *ocb)
 		if ((status = iofunc_read_verify (ctp, msg, ocb, &nonblock)) != EOK)
 			return (status);
 
+		printf("Client incoming, rcvid: %d\n", ctp->rcvid);
+
 		pthread_mutex_lock(&queue.resource_mutex);
+		puts("Blocked clients:");
+		fifo_print_blocked_ids(&queue);
+		puts("Items in queue:");
+		fifo_print(&queue);
+
 		if (nonblock) {
 			if (!fifo_status(&queue)) {
 				// Queue is empty, return
 				pthread_mutex_unlock(&queue.resource_mutex);
-				return EAGAIN;
+				// set to return no data
+				_IO_SET_READ_NBYTES(ctp, 0);
+				return (_RESMGR_NPARTS(0));
 			}
 		} else {
 			fifo_add_blocked_id(&queue, ctp->rcvid);
 			pthread_mutex_unlock(&queue.resource_mutex);
-			while(!fifo_status(&queue)); // TODO: complete this shit
+			int fifostatus = 0;
+			while(!fifostatus) {
+				// Block until there's a message available
+				pthread_mutex_lock(&queue.resource_mutex);
+				fifostatus = fifo_status(&queue);
+				if (fifostatus && queue.blocked_id[queue.blockedHead] == ctp->rcvid) {
+					// We're next - remove from blocked list and return data
+					fifo_rem_blocked_id(&queue);
+					printf("Client unblocked, rcvid: %d\n", ctp->rcvid);
+					break;
+				}
+				pthread_mutex_unlock(&queue.resource_mutex);
+				sleep(1);
+			}
 		}
+
+		fifo_rem_string(&queue, &buf);
+		puts("Blocked clients:");
+		fifo_print_blocked_ids(&queue);
+		puts("Items in queue:");
+		fifo_print(&queue);
 
 		// set data to return
 		SETIOV(ctp->iov, buf, strlen(buf));
 		_IO_SET_READ_NBYTES(ctp, strlen(buf));
 		pthread_mutex_unlock(&queue.resource_mutex);
+
+		printf("Client served, rcvid: %d\n", ctp->rcvid);
 
 		// increase the offset (new reads will not get the same data)
 		ocb->offset = 1;
@@ -271,12 +301,13 @@ int io_write_fifo(resmgr_context_t *ctp, io_write_t *msg, iofunc_ocb_t *ocb)
 		resmgr_msgread(ctp, buf, size, sizeof(msg->i));
 		buf[size] = '\0';
 		if (fifo_add_string(&queue, buf)) { // If queue is full, message gets discarded
-			_IO_SET_WRITE_NBYTES(ctp, strlen(buf));
+			//_IO_SET_WRITE_NBYTES(ctp, strlen(buf));
 			printf("New contents: %s\n", buf);
 		} else {
-			_IO_SET_WRITE_NBYTES(ctp, 0);
+			//_IO_SET_WRITE_NBYTES(ctp, 0);
 			printf("Queue is full, sorry m8\n");
 		}
+		_IO_SET_WRITE_NBYTES(ctp, strlen(buf));
 		pthread_mutex_unlock(&queue.resource_mutex);
 
 		// increase the offset (new reads will not get the same data)
