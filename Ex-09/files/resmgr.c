@@ -24,6 +24,7 @@ int io_read_count(resmgr_context_t *ctp, io_read_t *msg, iofunc_ocb_t *ocb);
 int io_write_count(resmgr_context_t *ctp, io_write_t *msg, iofunc_ocb_t *ocb);
 int io_read_fifo(resmgr_context_t *ctp, io_read_t *msg, iofunc_ocb_t *ocb);
 int io_write_fifo(resmgr_context_t *ctp, io_write_t *msg, iofunc_ocb_t *ocb);
+void respond_to_blocked_client(resmgr_context_t *ctp, int client_id);
 
 char buf[BUFFER_MAX_SIZE+1] = "Hello World\n";
 int count = 0, dir = 0; // Dir: -1 down 0 stop, 1 up
@@ -67,14 +68,14 @@ int main(int argc, char *argv[]) {
 //	io_funcs.read = io_read_str;
 //	io_funcs.write = io_write_str;
 	// Oppgave 2
-//	io_funcs.read = io_read_count;
-//	io_funcs.write = io_write_count;
-//	pthread_t worker;
-//	pthread_create(&worker, NULL, &worker_thread, NULL);
+	io_funcs.read = io_read_count;
+	io_funcs.write = io_write_count;
+	pthread_t worker;
+	pthread_create(&worker, NULL, &worker_thread, NULL);
 	// Oppgave 3
-	io_funcs.read = io_read_fifo;
-	io_funcs.write = io_write_fifo;
-	init_fifo(&queue);
+//	io_funcs.read = io_read_fifo;
+//	io_funcs.write = io_write_fifo;
+//	init_fifo(&queue);
 
 
 	// establish resource manager
@@ -232,17 +233,20 @@ int io_read_fifo(resmgr_context_t *ctp, io_read_t *msg, iofunc_ocb_t *ocb)
 		puts("Items in queue:");
 		fifo_print(&queue);
 
-		if (nonblock) {
-			if (!fifo_status(&queue)) {
-				// Queue is empty, return
-				pthread_mutex_unlock(&queue.resource_mutex);
+		if (!fifo_status(&queue)) {
+			// Queue is empty, return
+			pthread_mutex_unlock(&queue.resource_mutex);
+			if (nonblock) {
 				// set to return no data
 				_IO_SET_READ_NBYTES(ctp, 0);
 				return (_RESMGR_NPARTS(0));
+			} else {
+				fifo_add_blocked_id(&queue, ctp->rcvid);
+				return (_RESMGR_NOREPLY);
 			}
-		} else {
-			fifo_add_blocked_id(&queue, ctp->rcvid);
-			pthread_mutex_unlock(&queue.resource_mutex);
+		} //else {
+			//fifo_add_blocked_id(&queue, ctp->rcvid);
+/*			pthread_mutex_unlock(&queue.resource_mutex);
 			int fifostatus = 0;
 			while(!fifostatus) {
 				// Block until there's a message available
@@ -257,9 +261,10 @@ int io_read_fifo(resmgr_context_t *ctp, io_read_t *msg, iofunc_ocb_t *ocb)
 				pthread_mutex_unlock(&queue.resource_mutex);
 				sleep(1);
 			}
-		}
+*/
+	//	}
 
-		fifo_rem_string(&queue, &buf);
+		fifo_rem_string(&queue, buf);
 		puts("Blocked clients:");
 		fifo_print_blocked_ids(&queue);
 		puts("Items in queue:");
@@ -308,6 +313,9 @@ int io_write_fifo(resmgr_context_t *ctp, io_write_t *msg, iofunc_ocb_t *ocb)
 			printf("Queue is full, sorry m8\n");
 		}
 		_IO_SET_WRITE_NBYTES(ctp, strlen(buf));
+		// Check if we have clients waiting
+		respond_to_blocked_client(ctp, fifo_rem_blocked_id(&queue));
+
 		pthread_mutex_unlock(&queue.resource_mutex);
 
 		// increase the offset (new reads will not get the same data)
@@ -323,4 +331,21 @@ int io_write_fifo(resmgr_context_t *ctp, io_write_t *msg, iofunc_ocb_t *ocb)
 		// return
 		return (_RESMGR_NPARTS(0));
 	}
+}
+
+/*
+ * !!NOTE: this should be called only by the thread holding the mutex, otherwise
+ * it may yield undefined results due to race conditions!!
+ */
+void respond_to_blocked_client(resmgr_context_t *ctp, int client_id) {
+	if (client_id == -1)
+		return;
+	// Send reply to the waiting client
+	fifo_rem_string(&queue, buf);
+	// set data to return
+	SETIOV(ctp->iov, buf, strlen(buf));
+	_IO_SET_READ_NBYTES(ctp, strlen(buf));
+	ctp->offset = 1;
+
+	MsgReply(client_id, strlen(buf), &buf, strlen(buf));
 }

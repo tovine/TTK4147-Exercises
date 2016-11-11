@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
 	printf("Reading from file example \n");
 	int res;
 	char buf[100];
-	int fd = open("/dev/myresource", O_RDONLY | O_NONBLOCK);
+	int fd = open("/dev/myresource", O_RDONLY);// | O_NONBLOCK);
 
 	res = read(fd, buf, 100);
 	buf[res] = '\0';
