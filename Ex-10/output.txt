@@ -1,0 +1,30 @@
+# # ls
+Miniproject2            RemoteSystemsTempFiles  mymodule.ko
+# insmod mymodule.ko 
+Hello world 1.
+# cat /proc/myproc 
+Hello proc
+# rmmod mymodule.ko
+# ls
+Miniproject2            RemoteSystemsTempFiles  mymodule.ko
+# cat /proc/m
+/proc/meminfo  /proc/modules  /proc/mtd
+/proc/misc     /proc/mounts   /proc/myproc
+# cat /proc/m
+/proc/meminfo  /proc/modules  /proc/mtd
+/proc/misc     /proc/mounts   /proc/myproc
+# cat /proc/myproc 
+Hello proc
+# rmmod mymodule
+Goodbye world 1.
+rmmod: module 'mymodule' not found
+# rmmod myproc
+# cat /proc/m
+/proc/meminfo  /proc/misc     /proc/modules  /proc/mounts   /proc/mtd
+# cat /proc/m
+/proc/meminfo  /proc/misc     /proc/modules  /proc/mounts   /proc/mtd
+# cat /proc/m
+/proc/meminfo  /proc/misc     /proc/modules  /proc/mounts   /proc/mtd
+# cat /proc/m
+# 
+
