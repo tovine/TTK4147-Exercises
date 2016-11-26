@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <semaphore.h>
+
 //#include <sys/time.h>
 #include "miniproject.h"
 
@@ -23,9 +24,11 @@
 // Configuration parameters
 #define K_P             10.0
 #define K_I             800.0
-#define PERIOD_US       2000.0
-#define SIMULATION_TIME 500000.0
-#define REFERENCE       0.0
+#define PERIOD_US       2000
+//#define PERIOD_S        (PERIOD_US / 100000)
+#define PERIOD_S	0.002
+#define SIMULATION_TIME 500000
+#define REFERENCE       1.0
 
 pthread_mutex_t sendLock;
 sem_t receiveY;
@@ -36,6 +39,8 @@ struct udp_conn udpSocket;
 
 
 int main (){
+	udp_init_client(&udpSocket, 9999, "192.168.0.1");
+
 	pthread_mutex_init(&sendLock,NULL);
 	sem_init(&receiveY,0,0);
 	sem_init(&receiveSignal,0,0);
@@ -48,6 +53,13 @@ int main (){
 		
 	pthread_t responderThread;
 	pthread_create(&responderThread,NULL,&signalResponse,NULL);
+
+	pthread_join(piThread, NULL);
+	g_running = 0;
+	pthread_join(responderThread, NULL);
+	pthread_join(udpListener, NULL);
+	udp_close(&udpSocket);
+	return 0;
 }
 
 int udp_init_client(struct udp_conn *udp, int port, char *ip)
@@ -134,19 +146,24 @@ void * PIController(void * args){
 	double u=0;
 	struct timespec now;
 	struct timespec endSimulation;
-	char dataBuffer[50];
+	char dataBuffer[UDP_RECV_BUF_LEN] = {0};
+
+//	sprintf(dataBuffer, "START");
+//	sendToServer(dataBuffer);
+	puts("Sent START");
+	sendToServer("START");
 
 	clock_gettime(CLOCK_REALTIME,&now);
 	clock_gettime(CLOCK_REALTIME,&endSimulation);
 	timespec_add_us(&endSimulation,SIMULATION_TIME);
 
 	//Run until end of simulation
-	while(timercmp(&endSimulation,&now,>)){
+	while(timercmp(&endSimulation,&now,>) == 1){
 		//Send get to server and w8 for reply
 		waitForNewFeedback();
 
 		error=REFERENCE-g_y;
-		integral+=error*PERIOD_US;
+		integral+=error*PERIOD_S;
 		u=K_P*error+K_I*integral;
 
 		//Send to network (blocked with mutex)
@@ -158,6 +175,8 @@ void * PIController(void * args){
 		//w8 for period
 		clock_nanosleep(&now);
 	}
+	sendToServer("STOP");
+	puts("Sent STOP");
 	return args;
 }
 
@@ -165,20 +184,22 @@ void * PIController(void * args){
  * Thread that receives data from the UDP socket
  */
 void * udpReceiver(void * args){
-	char data[UDP_RECV_BUF_LEN];
 	int status=0;
 	while(g_running){
+		char data[UDP_RECV_BUF_LEN];
 		status=udp_receive(&udpSocket,data,UDP_RECV_BUF_LEN);
 		if (status>0){
 			if (strncmp(data,"GET_ACK",7)==0){
 				g_y=atof(&data[8]);
 				sem_post(&receiveY);
+				puts(data);
 
 			}
 			else if (strncmp(data,"SIGNAL",6)==0){
 				sem_post(&receiveSignal);
 			}
 		}
+		
 	}
 	return args;
 }
@@ -187,7 +208,7 @@ void * udpReceiver(void * args){
  * Thread to respond to the reaction test
  */
 void * signalResponse(void * args){
-	char response[]="SIGNAL_ACK";
+	char response[UDP_RECV_BUF_LEN]="SIGNAL_ACK";
 	while (g_running){
 		sem_wait(&receiveSignal);
 		sendToServer(response);
@@ -197,14 +218,15 @@ void * signalResponse(void * args){
 
 void sendToServer(char * data){
 	pthread_mutex_lock(&sendLock);
-	udp_send(&udpSocket,data,strlen(data)-1);
+	udp_send(&udpSocket,data,strlen(data)+1);
+//	memset(&data, 0, UDP_RECV_BUF_LEN);
 	pthread_mutex_unlock(&sendLock);
 }
 
 void waitForNewFeedback(void){
-	char dataBuffer[50];
-	sprintf(dataBuffer,"GET");
-	sendToServer(dataBuffer);
+//	char dataBuffer[UDP_RECV_BUF_LEN];
+//	sprintf(dataBuffer,"GET");
+	sendToServer("GET");
 	sem_wait(&receiveY);
 	return;
 }
