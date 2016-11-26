@@ -32,4 +32,11 @@ int clock_nanosleep(struct timespec *next);
 
 void timespec_add_us(struct timespec *t, long us);
 
+void sendToServer(char * data);
+void waitForNewFeedback();
+
+void * PIController(void * args);
+void * udpReceiver(void * args);
+void * signalResponse(void * args);
+
 #endif /* MINIPROJECT_H_ */

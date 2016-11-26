@@ -9,8 +9,46 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <signal.h>
-
+#include <pthread.h>
+#include <semaphore.h>
+//#include <sys/time.h>
 #include "miniproject.h"
+
+#define timercmp(a,b,CMP) \
+(((a)->tv_sec == (b)->tv_sec) ? \
+((a)->tv_nsec CMP (b)->tv_nsec) : \
+((a)->tv_sec CMP (b)->tv_sec))
+
+#define UDP_RECV_BUF_LEN 255
+// Configuration parameters
+#define K_P             10.0
+#define K_I             800.0
+#define PERIOD_US       2000.0
+#define SIMULATION_TIME 500000.0
+#define REFERENCE       0.0
+
+pthread_mutex_t sendLock;
+sem_t receiveY;
+sem_t receiveSignal;
+volatile double g_y;
+int g_running=1;
+struct udp_conn udpSocket;
+
+
+int main (){
+	pthread_mutex_init(&sendLock,NULL);
+	sem_init(&receiveY,0,0);
+	sem_init(&receiveSignal,0,0);
+
+	pthread_t udpListener;
+	pthread_create(&udpListener,NULL,&udpReceiver,NULL);
+
+	pthread_t piThread;
+	pthread_create(&piThread,NULL,&PIController,NULL);
+		
+	pthread_t responderThread;
+	pthread_create(&responderThread,NULL,&signalResponse,NULL);
+}
 
 int udp_init_client(struct udp_conn *udp, int port, char *ip)
 {
@@ -87,28 +125,87 @@ void timespec_add_us(struct timespec *t, long us)
 	}
 }
 
-//Tar input fra en fifo (altså, y)
-//Regner ut nytt pådrag
-//Legger det i en fifo
-void PIController(double Kp,double Ki,double reference, double period_us, double simulationTime){
-	double error, integral,u;
+/**
+ * Thread that will do the regulation
+ */
+void * PIController(void * args){
+	double error=0;
+	double integral=0;
+	double u=0;
 	struct timespec now;
 	struct timespec endSimulation;
+	char dataBuffer[50];
 
 	clock_gettime(CLOCK_REALTIME,&now);
 	clock_gettime(CLOCK_REALTIME,&endSimulation);
-	timespec_add_us(&endSimulation,simulationTime);
+	timespec_add_us(&endSimulation,SIMULATION_TIME);
 
 	//Run until end of simulation
-	while( timercmp(&endSimulation,&now,>)==1){
-		//POP Y FROM FIFO
-		error=reference-y;
-		integral+=error*period_us;
-		u=Kp*error +
+	while(timercmp(&endSimulation,&now,>)){
+		//Send get to server and w8 for reply
+		waitForNewFeedback();
+
+		error=REFERENCE-g_y;
+		integral+=error*PERIOD_US;
+		u=K_P*error+K_I*integral;
+
+		//Send to network (blocked with mutex)
+		sprintf(dataBuffer,"SET:%f",u);
+		sendToServer(dataBuffer);
+
+		//Update now time
+		timespec_add_us(&now,PERIOD_US);
+		//w8 for period
+		clock_nanosleep(&now);
 	}
-
-
+	return args;
 }
 
+/**
+ * Thread that receives data from the UDP socket
+ */
+void * udpReceiver(void * args){
+	char data[UDP_RECV_BUF_LEN];
+	int status=0;
+	while(g_running){
+		status=udp_receive(&udpSocket,data,UDP_RECV_BUF_LEN);
+		if (status>0){
+			if (strncmp(data,"GET_ACK",7)==0){
+				g_y=atof(&data[8]);
+				sem_post(&receiveY);
 
+			}
+			else if (strncmp(data,"SIGNAL",6)==0){
+				sem_post(&receiveSignal);
+			}
+		}
+	}
+	return args;
+}
+
+/**
+ * Thread to respond to the reaction test
+ */
+void * signalResponse(void * args){
+	char response[]="SIGNAL_ACK";
+	while (g_running){
+		sem_wait(&receiveSignal);
+		sendToServer(response);
+	}
+	return args;
+}
+
+void sendToServer(char * data){
+	pthread_mutex_lock(&sendLock);
+	udp_send(&udpSocket,data,strlen(data)-1);
+	pthread_mutex_unlock(&sendLock);
+}
+
+void waitForNewFeedback(void){
+	char dataBuffer[50];
+	sprintf(dataBuffer,"GET");
+	sendToServer(dataBuffer);
+	sem_wait(&receiveY);
+	return;
+}
 
