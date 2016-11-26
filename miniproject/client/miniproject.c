@@ -12,7 +12,6 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-//#include <sys/time.h>
 #include "miniproject.h"
 
 #define timercmp(a,b,CMP) \
@@ -25,10 +24,11 @@
 #define K_P             10.0
 #define K_I             800.0
 #define PERIOD_US       2000
-//#define PERIOD_S        (PERIOD_US / 100000)
 #define PERIOD_S	0.002
 #define SIMULATION_TIME 500000
 #define REFERENCE       1.0
+
+#define PART1		1
 
 pthread_mutex_t sendLock;
 sem_t receiveY;
@@ -36,7 +36,6 @@ sem_t receiveSignal;
 volatile double g_y;
 int g_running=1;
 struct udp_conn udpSocket;
-
 
 int main (){
 	udp_init_client(&udpSocket, 9999, "192.168.0.1");
@@ -50,15 +49,19 @@ int main (){
 
 	pthread_t piThread;
 	pthread_create(&piThread,NULL,&PIController,NULL);
-		
+#ifdef PART1		
 	pthread_t responderThread;
 	pthread_create(&responderThread,NULL,&signalResponse,NULL);
+#endif
 
 	pthread_join(piThread, NULL);
 	g_running = 0;
-	pthread_join(responderThread, NULL);
-	pthread_join(udpListener, NULL);
 	udp_close(&udpSocket);
+#ifdef PART1
+	pthread_join(responderThread, NULL);
+#endif
+	// Wont actually exit unless the udp module is changed to accept timeout, or using the O_NONBLOCK flag, with some additional if test to see if we actually get data.
+	pthread_join(udpListener, NULL);
 	return 0;
 }
 
@@ -148,8 +151,6 @@ void * PIController(void * args){
 	struct timespec endSimulation;
 	char dataBuffer[UDP_RECV_BUF_LEN] = {0};
 
-//	sprintf(dataBuffer, "START");
-//	sendToServer(dataBuffer);
 	puts("Sent START");
 	sendToServer("START");
 
@@ -216,18 +217,20 @@ void * signalResponse(void * args){
 	return args;
 }
 
+/**
+* Mutex protected udp send function
+*/
 void sendToServer(char * data){
 	pthread_mutex_lock(&sendLock);
 	udp_send(&udpSocket,data,strlen(data)+1);
-//	memset(&data, 0, UDP_RECV_BUF_LEN);
 	pthread_mutex_unlock(&sendLock);
 }
 
+/**
+* Sends the get signal, and waits for the listener to free the semaphore.
+*/
 void waitForNewFeedback(void){
-//	char dataBuffer[UDP_RECV_BUF_LEN];
-//	sprintf(dataBuffer,"GET");
 	sendToServer("GET");
 	sem_wait(&receiveY);
 	return;
 }
-
