@@ -28,7 +28,7 @@
 #define SIMULATION_TIME 500000
 #define REFERENCE       1.0
 
-#define PART1		1
+#define PART2		1
 
 pthread_mutex_t sendLock;
 sem_t receiveY;
@@ -49,7 +49,7 @@ int main (){
 
 	pthread_t piThread;
 	pthread_create(&piThread,NULL,&PIController,NULL);
-#ifdef PART1		
+#ifdef PART2
 	pthread_t responderThread;
 	pthread_create(&responderThread,NULL,&signalResponse,NULL);
 #endif
@@ -57,7 +57,7 @@ int main (){
 	pthread_join(piThread, NULL);
 	g_running = 0;
 	udp_close(&udpSocket);
-#ifdef PART1
+#ifdef PART2
 	pthread_join(responderThread, NULL);
 #endif
 	// Wont actually exit unless the udp module is changed to accept timeout, or using the O_NONBLOCK flag, with some additional if test to see if we actually get data.
